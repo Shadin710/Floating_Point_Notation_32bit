@@ -1,0 +1,2 @@
+g++ Float.cpp -o Float.exe -> to compile
+Float.exe ->to run
