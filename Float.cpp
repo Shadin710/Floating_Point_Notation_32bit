@@ -1,13 +1,19 @@
+//initializing header files
 #include<iostream>
 #include<cmath>
 #include<math.h>
 #include<algorithm>
 using namespace std;
+
+//global variable
 float number,frac_number,store_frac[1000];
 int i=0,lower_number,get_mod[1000];
 int get_mod_reverse[1000],index=0,get_frac[1000];
 int siz=0;
 
+
+//turns off the sync in cin and cout
+//makes the program faster
 void turn_off()
 {
     cin.tie(0);
