@@ -49,26 +49,33 @@ void convert_binary_int()
 }
 
 //this is a simple binary search 
-void bin_search(int frac)
+int bin_search(int frac)
 {
     sort(store_frac,store_frac+siz);
 
-    int start=0,end =siz-1;
+    int start=0,end =siz-1,mid,flag=0;
     while (start<=end &&store_frac [start]<=store_frac[end])
     {
-        if(store_frac[start]==frac)
+        mid = (start+end)/2;
+        if(store_frac[mid]==frac)
         {
+            flag =1;
             break;
         }
-        else if(store_frac[start]>frac)
+        else if(store_frac[mid]>frac)
         {
-
+            end = mid;
         }
-        else if(store_frac[start]<frac)
+        else if(store_frac[mid]<frac)
         {
-             start = (start+end)/2;
+             start = mid;
+        }
+        else
+        {
+            flag=0;
         }
     }
+    return flag;
 }
 
 
@@ -87,11 +94,19 @@ void convert_binary_frac()
         frac = fabs(frac-get_frac[siz]);
         siz++;
         //end
-
-        //checks the repeatation of the frac number by using binary search 
+    
+        //checks the repeatation of the frac number by using binary search
+        if(bin_search(frac)) 
+        {
+            break;
+        }
     }
 }
 
+
+
+
+//driver fucntion
 int main()
 {
     turn_off();
