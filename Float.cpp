@@ -55,7 +55,7 @@ void convert_binary_int()
 }
 
 //this is a simple binary search 
-int bin_search(int frac)
+int bin_search(float frac)
 {
     sort(store_frac,store_frac+siz);
 
@@ -120,7 +120,7 @@ int main()
     get_frac_int();
 
 
-
-    cout<<"hello world"<<endl;
+    //debugger
+    //cout<<"hello world"<<endl;
     return 0;
 }
