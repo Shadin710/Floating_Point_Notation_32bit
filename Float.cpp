@@ -1,16 +1,16 @@
 //initializing header files
-#include<iostream>
-#include<cmath>
-#include<math.h>
-#include<algorithm>
+#include <iostream>
+#include <cmath>
+#include <math.h>
+#include <algorithm>
 using namespace std;
 
 //global variable
-float number,frac_number,store_frac[1000];
-int i=0,lower_number,get_mod[1000];
-int get_mod_reverse[1000],index=0,get_frac[1000];
-int siz=0;
-
+float number, frac_number, store_frac[1000];
+int i = 0, lower_number, get_mod[1000];
+int get_mod_reverse[1000], index = 0, get_frac[1000];
+int siz = 0;
+int expo;
 
 //turns off the sync in cin and cout
 //makes the program faster
@@ -22,95 +22,155 @@ void turn_off()
 
 void input()
 {
-    cin>> number;
+    cin >> number;
 }
 void get_frac_int()
 {
     lower_number = floor(number);
-    frac_number  = number-lower_number;
+    frac_number = number - lower_number;
 }
 
 //converts integer number to binary 7=>binary
 void convert_binary_int()
 {
-    int lower = lower_number,sum=0;
-    while(lower)
+    int lower = lower_number, sum = 0;
+    while (lower)
     {
-        get_mod[i] = lower%2;
-        lower /=2;
+        get_mod[i] = lower % 2;
+        lower /= 2;
         i++;
     }
 
     //get_mod_reverse stores the real binary of the int
-    for(;;)
+    for (;;)
     {
-        get_mod_reverse[index] = get_mod[i-1];
+        get_mod_reverse[index] = get_mod[i - 1];
         i--;
         index++;
-        if(i==0)
+        if (i == 0)
         {
             break;
-        }        
+        }
     }
 }
 
-//this is a simple binary search 
+//this is a simple binary search
 int bin_search(float frac)
 {
-    sort(store_frac,store_frac+siz);
+    sort(store_frac, store_frac + siz);
 
-    int start=0,end =siz-1,mid,flag=0;
-    while (start<=end &&store_frac [start]<=store_frac[end])
+    int start = 0, end = siz - 1, mid, flag = 0;
+    while (start <= end && store_frac[start] <= store_frac[end])
     {
-        mid = (start+end)/2;
-        if(store_frac[mid]==frac)
+        mid = (start + end) / 2;
+        if (store_frac[mid] == frac)
         {
-            flag =1;
+            flag = 1;
             break;
         }
-        else if(store_frac[mid]>frac)
+        else if (store_frac[mid] > frac)
         {
             end = mid;
         }
-        else if(store_frac[mid]<frac)
+        else if (store_frac[mid] < frac)
         {
-             start = mid;
+            start = mid;
         }
         else
         {
-            flag=0;
+            flag = 0;
         }
     }
     return flag;
 }
 
-
 //converts fraction number to binary 0.01 =>binary
 void convert_binary_frac()
 {
-    float frac= frac_number;
-    while(frac!=0)
+    float frac = frac_number;
+    while (frac != 0) //check this condition if any error comes...
     {
         //stores the fractional number
-        store_frac [siz]=frac;
+        store_frac[siz] = frac;
 
         //method to convert binary
-        frac = frac *2;
+        frac = frac * 2;
         get_frac[siz] = floor(frac);
-        frac = fabs(frac-get_frac[siz]);
+        frac = fabs(frac - get_frac[siz]);
         siz++;
         //end
-    
+
         //checks the repeatation of the frac number by using binary search
-        if(bin_search(frac)) 
+        if (bin_search(frac))
         {
             break;
         }
     }
 }
 
+//searches 1 to get the exponential power
+void search_1()
+{
+    int check = 0;
+    for (int j = 0; j < index; j++)
+    {
+        if (get_mod_reverse[j] == 1)
+        {
+            expo = index - j;
+            check = 1;
+            break;
+        }
+    }
+    if (!check)
+    {
+        for (int j = 0; j < siz; j++)
+        {
+            if (get_frac[j] == 1)
+            {
+                expo = j*(-1);
+                //check = 1;
+                break;
+            }
+        }
+    }
+}
 
+int* make_bin(int num)
+{
+    
+    int lower = num, sum = 0,mod[1000],mod_r[1000],j=0,inde =0;
+    while (lower)
+    {
+        mod[j] = lower % 2;
+        lower /= 2;
+        j++;
+    }
 
+    //get_mod_reverse stores the real binary of the int
+    for (;;)
+    {
+        mod_r[inde] = mod[j - 1];
+        j--;
+        inde++;
+        if (j == 0)
+        {
+            break;
+        }
+    }
+    return mod_r;
+}
+void frac_bit()
+{
+    if(expo<0)
+    {
+        
+    }
+    else
+    {
+        
+    }
+    
+}
 
 //driver fucntion
 int main()
@@ -118,7 +178,6 @@ int main()
     turn_off();
     input();
     get_frac_int();
-
 
     //debugger
     //cout<<"hello world"<<endl;
