@@ -131,7 +131,7 @@ void search_1()
         {
             if (get_frac[j] == 1)
             {
-                expo = j*(-1);
+                expo = (j+1)*(-1);
                 //check = 1;
                 get_1 = j;
                 break;
@@ -192,9 +192,8 @@ void frac_bit()
     }
     else
     {
-
-    }
-    
+           
+    }      
 }
 
 //driver fucntion
