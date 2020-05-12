@@ -11,7 +11,7 @@ int i = 0, lower_number, get_mod[1000];
 int get_mod_reverse[1000], index = 0, get_frac[1000];
 int siz = 0;
 int expo,get_1,make_frac[1000];
-
+int exp2[1000];
 //turns off the sync in cin and cout
 //makes the program faster
 void turn_off()
@@ -192,7 +192,17 @@ void frac_bit()
     }
     else
     {
-           
+           int len_frac = siz+expo,incre=get_1+1;
+           for(int k=0;k<len_frac;k++)
+           {
+               
+               make_frac[k]=get_frac[incre];
+               incre++;
+               if(incre == siz)
+               {
+                   break;
+               }
+           }
     }      
 }
 
@@ -205,7 +215,7 @@ int main()
     convert_binary_int();
     convert_binary_frac();
     search_1();
-
+    
     //debugger
     //cout<<"hello world"<<endl;
     return 0;
