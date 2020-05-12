@@ -10,7 +10,7 @@ float number, frac_number, store_frac[1000];
 int i = 0, lower_number, get_mod[1000];
 int get_mod_reverse[1000], index = 0, get_frac[1000];
 int siz = 0;
-int expo;
+int expo,get_1,make_frac[1000];
 
 //turns off the sync in cin and cout
 //makes the program faster
@@ -112,15 +112,19 @@ void convert_binary_frac()
 void search_1()
 {
     int check = 0;
+
+    //gets the initial bit 
     for (int j = 0; j < index; j++)
     {
         if (get_mod_reverse[j] == 1)
         {
             expo = index - j;
             check = 1;
+            get_1 = j;
             break;
         }
     }
+    /// 0.0000001
     if (!check)
     {
         for (int j = 0; j < siz; j++)
@@ -129,12 +133,14 @@ void search_1()
             {
                 expo = j*(-1);
                 //check = 1;
+                get_1 = j;
                 break;
             }
         }
     }
 }
 
+//takes any integer number and converts it in binary 
 int* make_bin(int num)
 {
     
@@ -159,15 +165,34 @@ int* make_bin(int num)
     }
     return mod_r;
 }
+
+
+
 void frac_bit()
 {
-    if(expo<0)
+    if(expo>=0)
     {
-        
+        //gets the fractional length of fractional bits
+        int len_frac = abs(index-get_1)+siz;
+        int incre=get_1,frac_incre=0;
+        for(int k=0;k<len_frac;k++)
+        {
+            if(incre<=index)
+            {
+                make_frac[k]=get_mod_reverse[incre];
+                incre++;
+            }
+            else
+            {
+                make_frac[k] = get_frac[frac_incre];
+                frac_incre++;
+            }
+             
+        }
     }
     else
     {
-        
+
     }
     
 }
@@ -178,6 +203,9 @@ int main()
     turn_off();
     input();
     get_frac_int();
+    convert_binary_int();
+    convert_binary_frac();
+    search_1();
 
     //debugger
     //cout<<"hello world"<<endl;
