@@ -168,6 +168,8 @@ int* make_bin(int num)
 
 
 
+
+//helps us to get the fraction bits
 void frac_bit()
 {
     //if there is a 1 in the integer part of number
@@ -207,16 +209,63 @@ void frac_bit()
            }
     }      
 }
-
+int check_sign()
+{
+    if(number>=0)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+    
+}
 //driver fucntion
 int main()
 {
+    int *ex;
+    int sign_bit,EEE[100];
+
     turn_off();
     input();
+
     get_frac_int();
     convert_binary_int();
+
     convert_binary_frac();
     search_1();
+
+    frac_bit();
+    ex = make_bin(expo);
+    sign_bit = check_sign();
+    
+    int pos=0,pos_frac=0;
+    for(int in = 0;in<32;in++)
+    {
+        if(in==0)
+        {
+            EEE[in]=sign_bit;
+        }
+        else if(in>=1 && in<=8)
+        {
+            EEE[in] = ex[pos];
+            pos++;
+        }
+        else
+        {
+            EEE[in]  = make_frac[pos_frac];
+            pos_frac++;
+        }
+        
+    }
+    
+    //displays 
+    for (int in = 0; in < 32; in++)
+    {
+        cout<<EEE[in]<<" ";
+    }
+    cout<<endl;
     
     //debugger
     //cout<<"hello world"<<endl;
