@@ -170,6 +170,7 @@ int* make_bin(int num)
 
 void frac_bit()
 {
+    //if there is a 1 in the integer part of number
     if(expo>=0)
     {
         //gets the fractional length of fractional bits
@@ -190,6 +191,7 @@ void frac_bit()
              
         }
     }
+    //if there is 1 in the fractional part of the binary
     else
     {
            int len_frac = siz+expo,incre=get_1+1;
