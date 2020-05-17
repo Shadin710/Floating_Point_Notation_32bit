@@ -1,273 +1,180 @@
-//initializing header files
-#include <iostream>
-#include <cmath>
-#include <math.h>
-#include <algorithm>
+#include<bits/stdc++.h>
 using namespace std;
 
-//global variable
-float number, frac_number, store_frac[1000];
-int i = 0, lower_number, get_mod[1000];
-int get_mod_reverse[1000], index = 0, get_frac[1000];
-int siz = 0;
-int expo,get_1,make_frac[1000];
-int exp2[1000];
-//turns off the sync in cin and cout
-//makes the program faster
+//12.2  = 12 => lower = lower_number
+//0.2  = 0.2= >frac
+//convert  lower_number => binary
+//convert frac =>binary (run the loop 24 times)
+//check the sign bit
+//for 1 <=number there will be 1 at first index
+//normalize the number 1.01111010101....*2^10
+//10 =>expo +127 =>convert to binary
+//plug everything in this array
+//IEEE [SIGN BIT(1)] [EXPO BIT(8)] [FRACTIONAL BIT(23)]
+
+
+
+
+
+vector<int> make_frac,bin_int,expo_bin,IEEE;
+float frac,number,frac_temp;
+int lower_number,get_int_frac,check=0,get_1,expo,i,j,sign;
+int get_bin,lower,expo_size;
+
+
+
+
+
+//turns_off the sync
 void turn_off()
 {
     cin.tie(0);
     cout.tie(0);
 }
-
 void input()
 {
-    cin >> number;
+    cin>>number;
 }
-void get_frac_int()
+void check_sign()
 {
-    lower_number = floor(number);
-    frac_number = number - lower_number;
+    if(number<0)
+    {
+        number = fabs(number);
+        sign = 1;
+    }
+    else
+    {
+        sign = 0;
+    }
+}
+void get_in_fr()
+{
+    //taking the integer part
+     lower_number = number;
+     lower = number;
+    //taking fractional part
+    frac = number-lower_number;
 }
 
-//converts integer number to binary 7=>binary
-void convert_binary_int()
+//converts integer to binary
+void convert_int_binary()
 {
-    int lower = lower_number, sum = 0;
-    while (lower)
+    while(lower!=0)
     {
-        get_mod[i] = lower % 2;
-        lower /= 2;
+        get_bin = lower%2;
+        bin_int.push_back(get_bin);
+        lower/=2;
+    }
+    reverse(bin_int.begin(),bin_int.end());
+}
+//converts_fraction to binary
+void convert_frac_binary()
+{
+    frac_temp = frac;
+    //for(i = 0;i<24;i++)
+     while(i<50)
+    {
+        frac_temp = frac_temp*2;
+        get_int_frac = frac_temp;
+
+        //don't never ever check a fractional number is equal to zero -_-
+        if(lower_number!=0 || check==1)
+        {
+            make_frac.push_back(get_int_frac);
+        }
+        else if(get_int_frac==1&&check==0)
+        {
+            get_1 = i+1;
+            check =1;
+        }
+//        else if (check==1)
+//        {
+//            make_frac.push_back(get_int_frac);
+//        }
+        frac_temp = frac_temp - get_int_frac;
         i++;
     }
-
-    //get_mod_reverse stores the real binary of the int
-    for (;;)
-    {
-        get_mod_reverse[index] = get_mod[i - 1];
-        i--;
-        index++;
-        if (i == 0)
-        {
-            break;
-        }
-    }
+    //every integer number has 1 at first place so we don't need to calculate it
+     if(lower_number!=0)
+     {
+         get_1 = 1;
+     }
 }
-
-//this is a simple binary search
-int bin_search(float frac)
+void get_expo()
 {
-    sort(store_frac, store_frac + siz);
-
-    int start = 0, end = siz - 1, mid, flag = 0;
-    while (start <= end && store_frac[start] <= store_frac[end])
-    {
-        mid = (start + end) / 2;
-        if (store_frac[mid] == frac)
-        {
-            flag = 1;
-            break;
-        }
-        else if (store_frac[mid] > frac)
-        {
-            end = mid;
-        }
-        else if (store_frac[mid] < frac)
-        {
-            start = mid;
-        }
-        else
-        {
-            flag = 0;
-        }
-    }
-    return flag;
+    expo_size = bin_int.size()-get_1;
+    expo = expo_size+127;
 }
-
-//converts fraction number to binary 0.01 =>binary
-void convert_binary_frac()
+void convert_expo_binary()
 {
-    float frac = frac_number;
-    while (frac != 0) //check this condition if any error comes...
-    {
-        //stores the fractional number
-        store_frac[siz] = frac;
-
-        //method to convert binary
-        frac = frac * 2;
-        get_frac[siz] = floor(frac);
-        frac = fabs(frac - get_frac[siz]);
-        siz++;
-        //end
-
-        //checks the repeatation of the frac number by using binary search
-        if (bin_search(frac))
-        {
-            break;
-        }
-    }
+     while(expo!=0)
+     {
+         //ex= expo %2;
+         IEEE.push_back(expo%2);
+         expo = expo/2;
+     }
 }
-
-//searches 1 to get the exponential power
-void search_1()
+void make_valid()
 {
-    int check = 0;
+    //to make it 8 bit exponential  if in put is 0.0/0.111......
+     if(lower_number==0)
+     {
+         IEEE.push_back(0);
+     }
+     //pushing the sign bit
+     IEEE.push_back(sign);
 
-    //gets the initial bit 
-    for (int j = 0; j < index; j++)
-    {
-        if (get_mod_reverse[j] == 1)
-        {
-            expo = index - j;
-            check = 1;
-            get_1 = j;
-            break;
-        }
-    }
-    /// 0.0000001
-    if (!check)
-    {
-        for (int j = 0; j < siz; j++)
-        {
-            if (get_frac[j] == 1)
-            {
-                expo = (j+1)*(-1);
-                //check = 1;
-                get_1 = j;
-                break;
-            }
-        }
-    }
+     reverse(IEEE.begin(),IEEE.end());
 }
-
-//takes any integer number and converts it in binary 
-int* make_bin(int num)
+void ieee_format()
 {
-    
-    int lower = num, sum = 0,mod[1000],mod_r[1000],j=0,inde =0;
-    while (lower)
-    {
-        mod[j] = lower % 2;
-        lower /= 2;
-        j++;
-    }
+     //no need to make it reverse
+     for(i=1;i<bin_int.size();i++)
+     {
+         IEEE.push_back(bin_int[i]);
+     }
 
-    //get_mod_reverse stores the real binary of the int
-    for (;;)
-    {
-        mod_r[inde] = mod[j - 1];
-        j--;
-        inde++;
-        if (j == 0)
-        {
-            break;
-        }
-    }
-    return mod_r;
+     for(i=0;i<make_frac.size();i++)
+     {
+         IEEE.push_back(make_frac[i]);
+     }
 }
-
-
-
-
-//helps us to get the fraction bits
-void frac_bit()
+void display()
 {
-    //if there is a 1 in the integer part of number
-    if(expo>=0)
-    {
-        //gets the fractional length of fractional bits
-        int len_frac = abs(index-get_1)+siz;
-        int incre=get_1,frac_incre=0;
-        for(int k=0;k<len_frac;k++)
-        {
-            if(incre<=index)
-            {
-                make_frac[k]=get_mod_reverse[incre];
-                incre++;
-            }
-            else
-            {
-                make_frac[k] = get_frac[frac_incre];
-                frac_incre++;
-            }
-             
-        }
-    }
-    //if there is 1 in the fractional part of the binary
-    else
-    {
-           int len_frac = siz+expo,incre=get_1+1;
-           for(int k=0;k<len_frac;k++)
-           {
-               
-               make_frac[k]=get_frac[incre];
-               incre++;
-               if(incre == siz)
-               {
-                   break;
-               }
-           }
-    }      
+     cout<<"IEEE754(32 bit): ";
+     for(i=0;i<32;i++)
+     {
+         cout<<IEEE[i]<<"";
+     }
+     cout<<endl;
 }
-int check_sign()
-{
-    if(number>=0)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
-    
-}
-//driver fucntion
+//driver function
 int main()
 {
-    int *ex;
-    int sign_bit,EEE[100];
-
     turn_off();
+
     input();
+    check_sign();
 
-    get_frac_int();
-    convert_binary_int();
+    get_in_fr();
+    convert_int_binary();
 
-    convert_binary_frac();
-    search_1();
+    //cout<<"hello int binary works ";
+    //need to fix this bug
+    convert_frac_binary();
+  //  cout<<"hello ";
 
-    frac_bit();
-    ex = make_bin(expo);
-    sign_bit = check_sign();
-    
-    int pos=0,pos_frac=0;
-    for(int in = 0;in<32;in++)
-    {
-        if(in==0)
-        {
-            EEE[in]=sign_bit;
-        }
-        else if(in>=1 && in<=8)
-        {
-            EEE[in] = ex[pos];
-            pos++;
-        }
-        else
-        {
-            EEE[in]  = make_frac[pos_frac];
-            pos_frac++;
-        }
-        
-    }
-    
-    //displays 
-    for (int in = 0; in < 32; in++)
-    {
-        cout<<EEE[in]<<" ";
-    }
-    cout<<endl;
-    
-    //debugger
-    //cout<<"hello world"<<endl;
+
+    get_expo();
+    convert_expo_binary();
+
+    make_valid();
+
+    ieee_format();
+  //  cout<<"hello 2";
+
+    display();
+
     return 0;
+
 }
